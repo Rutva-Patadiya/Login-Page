@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Login Page',
       theme: TAppTheme.lightTheme,
+
       // darkTheme: TAppTheme.darkTheme,
       // themeMode: ThemeMode.system,
 
@@ -23,3 +24,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
