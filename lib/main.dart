@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login/on_boarding_page.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'login.dart';
 
@@ -13,14 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Login Page',
-      theme: TAppTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
+        title: 'Login Page',
+        theme: TAppTheme.lightTheme,
+        // darkTheme: TAppTheme.darkTheme,
+        // themeMode: ThemeMode.system,
 
-      // darkTheme: TAppTheme.darkTheme,
-      // themeMode: ThemeMode.system,
-
-      home: Login(),
+        home: Login()
+        // home: OnBoardingPage()
     );
   }
 }
