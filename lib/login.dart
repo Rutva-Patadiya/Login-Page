@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
+// import 'models/user_model.dart';
 
 class Login extends StatefulWidget {
   //const because we can reuse it not everytime rebuild it
@@ -25,6 +26,7 @@ class _LoginState extends State<Login> {
   //Authenticate user mail and password using API
   Future<void> _loginUser() async {
     setState(() {
+      print(obscureText);
       _isLoading = true; // Start loading
     });
 
@@ -290,3 +292,15 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
+
+// final decoded = jsonDecode(response.body);
+// if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
+//   final userData = UserModel.fromJson(decoded['data']);
+//
+//   if (!mounted) return;
+//   ScaffoldMessenger.of(context).showSnackBar(
+//     SnackBar(
+//       content: Text('Login successful! Welcome ${userData.firstname} ${userData.lastname}'),
+//     ),
+//   );
+// }

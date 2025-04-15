@@ -14,15 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Login Page',
-        theme: TAppTheme.lightTheme,
-        // darkTheme: TAppTheme.darkTheme,
-        // themeMode: ThemeMode.system,
-
-        home: Login()
-        // home: OnBoardingPage()
+      debugShowCheckedModeBanner: false,
+      title: 'Login Page',
+      theme: TAppTheme.lightTheme,
+      // darkTheme: TAppTheme.darkTheme,
+      // themeMode: ThemeMode.system,
+      // home: Login()
+      home: OnBoardingPage(),
     );
   }
 }
-

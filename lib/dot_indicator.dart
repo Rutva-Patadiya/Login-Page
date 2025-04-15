@@ -1,10 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:login/utils/theme/theme.dart';
 
-class DotIndicator extends StatelessWidget
-{
-
+class DotIndicator extends StatelessWidget {
   final int currentPage;
   final double activeWidth;
   final double inactiveWidth;
@@ -16,11 +13,10 @@ class DotIndicator extends StatelessWidget
     this.totalDots = 3,
     this.activeWidth = 20,
     this.inactiveWidth = 40,
-  }) ;
+  });
 
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(totalDots, (index) {

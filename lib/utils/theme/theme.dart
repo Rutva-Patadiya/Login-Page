@@ -24,13 +24,13 @@ class TAppTheme {
     inputDecorationTheme: TInputDecoration.lightInputDecorationTheme,
   );
 
-  static ThemeData darkTheme = ThemeData(
-    useMaterial3: true,
-    textTheme: TTextTheme.darkTextTheme,
-    fontFamily: 'Poppins',
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: Colors.black,
-    elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButtonTheme,
-    // inputDecorationTheme: TInputDecoration.darkInputDecorationTheme,
-  );
+  // static ThemeData darkTheme = ThemeData(
+  //   useMaterial3: true,
+  //   textTheme: TTextTheme.darkTextTheme,
+  //   fontFamily: 'Poppins',
+  //   brightness: Brightness.dark,
+  //   scaffoldBackgroundColor: Colors.black,
+  //   elevatedButtonTheme: TElevatedButtonTheme.darkElevatedButtonTheme,
+  //   // inputDecorationTheme: TInputDecoration.darkInputDecorationTheme,
+  // );
 }

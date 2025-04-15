@@ -10,7 +10,7 @@ class TTextTheme {
     displaySmall: TextStyle(fontSize: 22),
 
     headlineLarge: TextStyle(fontSize: 20, color: Colors.black),
-    headlineSmall: TextStyle(fontSize: 18, color: Colors.black),
+    headlineSmall: TextStyle(fontSize: 18, color: Colors.black,fontWeight: FontWeight.w400),
 
     bodyLarge: TextStyle(fontSize: 16),
 
