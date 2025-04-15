@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login/on_boarding_page.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'login.dart';
 
@@ -18,8 +19,8 @@ class MyApp extends StatelessWidget {
       theme: TAppTheme.lightTheme,
       // darkTheme: TAppTheme.darkTheme,
       // themeMode: ThemeMode.system,
-
-      home: Login(),
+      // home: Login()
+      home: OnBoardingPage(),
     );
   }
 }
