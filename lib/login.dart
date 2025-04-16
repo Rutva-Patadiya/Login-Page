@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
+import 'l10n/app_localizations.dart';
 // import 'models/user_model.dart';
 
 class Login extends StatefulWidget {
   //const because we can reuse it not everytime rebuild it
-  const Login({super.key});
+  final Function(Locale) onLocaleChange;
+  final Locale locale;
+
+  const Login({required this.onLocaleChange, required this.locale, super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -26,7 +30,6 @@ class _LoginState extends State<Login> {
   //Authenticate user mail and password using API
   Future<void> _loginUser() async {
     setState(() {
-      print(obscureText);
       _isLoading = true; // Start loading
     });
 
@@ -97,7 +100,6 @@ class _LoginState extends State<Login> {
       // appBar: AppBar(title: const Text("Log in to Inventory Management")),
       body: Padding(
         padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-
         //stack because on one screen we can put loader
         child: Stack(
           children: [
@@ -107,23 +109,75 @@ class _LoginState extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 30),
+
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 270),
+                        child: SizedBox(
+                          width: 100,
+                          child: DropdownButton<Locale>(
+                            hint: Text("abc"),
+                            value: widget.locale,
+                            // Use widget.locale for current value
+                            icon: Padding(
+                              padding: const EdgeInsets.only(right: 20),
+                              child: Icon(Icons.arrow_downward_outlined),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                value: const Locale('en'),
+                                child: Text(
+                                  'Eng',
+                                  style: TTextTheme.lightTextTheme.labelMedium,
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: const Locale('hi'),
+                                child: Text(
+                                  'हिंदी',
+                                  style: TTextTheme.lightTextTheme.labelMedium,
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: const Locale('fr'),
+                                child: Text(
+                                  'French',
+                                  style: TTextTheme.lightTextTheme.labelMedium,
+                                ),
+                              ),
+                            ],
+                            onChanged: (Locale? newLocale) {
+                              if (newLocale != null) {
+                                widget.onLocaleChange(
+                                  newLocale,
+                                ); // call the onLocaleChange function passed from OnBoardingPage
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
-                    "Log in to E-Mart",
+                    AppLocalizations.of(context)!.loginTitle,
+                    // "Log in to E-Mart",
                     style: TTextTheme.lightTextTheme.displayLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 7),
                   Text(
-                    "Enter your registered email id to log in.",
+                    AppLocalizations.of(context)!.loginSubTitle,
+                    // "Enter your registered email id to log in.",
                     style: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
-                      color: Colors.black54,
+                      color: Colors.blue,
                       fontFamily: 'Poppins-Bold',
                     ),
                   ),
                   SizedBox(height: 26),
                   CustomTextField(
-                    label: "Email",
+                    label: AppLocalizations.of(context)!.email,
                     hint: "abc@example.com",
                     hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                       color: Colors.black38,
@@ -148,8 +202,9 @@ class _LoginState extends State<Login> {
 
                   SizedBox(height: 16),
                   CustomTextField(
-                    label: "Password",
-                    hint: "Enter your password",
+                    label: AppLocalizations.of(context)!.password,
+
+                    hint: AppLocalizations.of(context)!.password,
                     hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                       color: Colors.black38,
                     ),
@@ -169,7 +224,6 @@ class _LoginState extends State<Login> {
                       return null; // means valid
                     },
                     prefixIcon: Icons.lock_outline,
-
                     suffixIcon: IconButton(
                       icon: Icon(
                         obscureText
@@ -189,7 +243,8 @@ class _LoginState extends State<Login> {
                     child: Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Text(
-                        "Forgot Password?",
+                        AppLocalizations.of(context)!.forgotPassword,
+                        // "Forgot Password?",
                         style: TTextTheme.lightTextTheme.labelMedium?.copyWith(
                           color: AppColors.bgAccent,
                         ),
@@ -209,10 +264,11 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 6),
                           child: Text(
+                            AppLocalizations.of(context)!.loginButton,
                             strutStyle: StrutStyle(leading: 1.5),
                             //used Strutstyle to maintain lineheight
-                            "Log in",
-                            style: TTextTheme.lightTextTheme.bodyLarge
+                            // "Log in",
+                            style: TTextTheme.lightTextTheme.headlineSmall
                                 ?.copyWith(color: Colors.white),
                           ),
                         ),
