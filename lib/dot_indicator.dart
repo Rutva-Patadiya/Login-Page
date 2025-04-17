@@ -25,7 +25,7 @@ class DotIndicator extends StatelessWidget {
           width: currentPage == index ? activeWidth : inactiveWidth,
           height: 10,
           decoration: BoxDecoration(
-            color: currentPage == index ? Colors.blue : AppColors.buttonColor,
+            color: currentPage == index ? Colors.blue : AppColors.greyColor,
             borderRadius: BorderRadius.circular(5),
           ),
         );
