@@ -2,18 +2,18 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:login/l10n/context_extension.dart';
+// import 'package:login/on_boarding_page.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
-import 'l10n/app_localizations.dart';
-// import 'models/user_model.dart';
+import 'home_page.dart';
+import 'models/user_model.dart';
 
 class Login extends StatefulWidget {
   //const because we can reuse it not everytime rebuild it
   final Function(Locale) onLocaleChange;
   final Locale locale;
-
   const Login({required this.onLocaleChange, required this.locale, super.key});
-
   @override
   State<Login> createState() => _LoginState();
 }
@@ -24,13 +24,22 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+   Locale selectedLocale= const Locale('Eng');
   bool _isLoading = false;
   bool obscureText = true;
+
+
+  @override
+  void initState() {
+    super.initState();
+    selectedLocale = widget.locale;
+  }
 
   //Authenticate user mail and password using API
   Future<void> _loginUser() async {
     setState(() {
       _isLoading = true; // Start loading
+
     });
 
     //uri.parse will convert the api into URI object format like scheme:https,host,path
@@ -56,24 +65,43 @@ class _LoginState extends State<Login> {
       log('Status Code: ${response.statusCode}');
       log('Response Body: ${response.body}');
 
+
+
+final decoded = jsonDecode(response.body);
+if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
+  final userData = UserModel.fromJson(decoded['data']);
+
+  if (!mounted) return;
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Login successful! Welcome ${userData.firstname} ${userData.lastname}'),
+    ),
+  );
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(builder: (context) => HomePage(onLocaleChange: widget.onLocaleChange,locale:widget.locale)),
+  );
+}
       //convert JSON to dart obj
-      final decoded = jsonDecode(response.body);
-      if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
-        //access data from object
-        final userData = decoded['data'];
-
-        //from data it will access first_name and last_name
-        final firstName = userData['first_name'];
-        final lastName = userData['last_name'];
-
-        //will check whether that widget is in widget screen or not
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Login successful! Welcome $firstName $lastName'),
-          ),
-        );
-      } else {
+      // final decoded = jsonDecode(response.body);
+      // if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
+      //   //access data from object
+      //   final userData = userModel.fromJson(decoded['data']);
+      //
+      //   //from data it will access first_name and last_name
+      //   final firstName = userData['first_name'];
+      //   final lastName = userData['last_name'];
+      //
+      //   //will check whether that widget is in widget screen or not
+      //   if (!mounted) return;
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text('Login successful! Welcome $firstName $lastName'),
+      //     ),
+      //   );
+      // }
+      else {
         final errorMessage = decoded['message'] ?? 'Login failed. Try again.';
 
         //first it will check whether that widget is alive in widget tree or not
@@ -110,57 +138,57 @@ class _LoginState extends State<Login> {
                 children: [
                   SizedBox(height: 30),
 
+
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 270),
-                        child: SizedBox(
-                          width: 100,
+                        padding: const EdgeInsets.only(left:220),
+                        child: SizedBox(width:100,
                           child: DropdownButton<Locale>(
-                            hint: Text("abc"),
-                            value: widget.locale,
-                            // Use widget.locale for current value
-                            icon: Padding(
-                              padding: const EdgeInsets.only(right: 20),
-                              child: Icon(Icons.arrow_downward_outlined),
-                            ),
+                            value: selectedLocale,
+                            onChanged: (Locale? newLocale) {
+                              if (newLocale != null) {
+                                setState(() {
+                                  selectedLocale = newLocale;
+                                });
+                                widget.onLocaleChange(newLocale);
+                              }
+                            },// Use widget.locale for current value
+                            icon:Icon(Icons.arrow_drop_down,size:20),
                             items: [
                               DropdownMenuItem(
                                 value: const Locale('en'),
-                                child: Text(
-                                  'Eng',
-                                  style: TTextTheme.lightTextTheme.labelMedium,
-                                ),
+                                child: Text('Eng',style:TTextTheme.lightTextTheme.labelMedium),
                               ),
                               DropdownMenuItem(
                                 value: const Locale('hi'),
-                                child: Text(
-                                  'हिंदी',
-                                  style: TTextTheme.lightTextTheme.labelMedium,
-                                ),
+                                child: Text('हिंदी',style:TTextTheme.lightTextTheme.labelMedium),
                               ),
                               DropdownMenuItem(
                                 value: const Locale('fr'),
-                                child: Text(
-                                  'French',
-                                  style: TTextTheme.lightTextTheme.labelMedium,
-                                ),
+                                child: Text('French',style:TTextTheme.lightTextTheme.labelMedium),
                               ),
                             ],
-                            onChanged: (Locale? newLocale) {
-                              if (newLocale != null) {
-                                widget.onLocaleChange(
-                                  newLocale,
-                                ); // call the onLocaleChange function passed from OnBoardingPage
-                              }
-                            },
+                            underline: Container(
+                              height: 0,
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 0.0,
+                                  ),
+                                ),
+                              ),
+
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
                   Text(
-                    AppLocalizations.of(context)!.loginTitle,
+                    context.loc.loginTitle,
+                    // AppLocalizations.of(context)!.loginTitle,
                     // "Log in to E-Mart",
                     style: TTextTheme.lightTextTheme.displayLarge?.copyWith(
                       fontWeight: FontWeight.bold,
@@ -168,7 +196,8 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 7),
                   Text(
-                    AppLocalizations.of(context)!.loginSubTitle,
+                    context.loc.loginSubTitle,
+                    // AppLocalizations.of(context)!.loginSubTitle,
                     // "Enter your registered email id to log in.",
                     style: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                       color: Colors.blue,
@@ -177,7 +206,8 @@ class _LoginState extends State<Login> {
                   ),
                   SizedBox(height: 26),
                   CustomTextField(
-                    label: AppLocalizations.of(context)!.email,
+                    label:context.loc.email,
+                    // AppLocalizations.of(context)!.email,
                     hint: "abc@example.com",
                     hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                       color: Colors.black38,
@@ -202,9 +232,11 @@ class _LoginState extends State<Login> {
 
                   SizedBox(height: 16),
                   CustomTextField(
-                    label: AppLocalizations.of(context)!.password,
 
-                    hint: AppLocalizations.of(context)!.password,
+                    label:context.loc.password,
+                    // AppLocalizations.of(context)!.password,
+
+                    hint: context.loc.password,
                     hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                       color: Colors.black38,
                     ),
@@ -235,6 +267,7 @@ class _LoginState extends State<Login> {
                       onPressed: () {
                         setState(() {
                           obscureText = !obscureText;
+
                         });
                       },
                     ),
@@ -243,7 +276,8 @@ class _LoginState extends State<Login> {
                     child: Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Text(
-                        AppLocalizations.of(context)!.forgotPassword,
+                        context.loc.forgotPassword,
+                        // AppLocalizations.of(context)!.forgotPassword,
                         // "Forgot Password?",
                         style: TTextTheme.lightTextTheme.labelMedium?.copyWith(
                           color: AppColors.bgAccent,
@@ -264,13 +298,12 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 6),
                           child: Text(
-                            AppLocalizations.of(context)!.loginButton,
+                            context.loc.loginButton,
+                            // AppLocalizations.of(context)!.loginButton, // or simply "Log In"
                             strutStyle: StrutStyle(leading: 1.5),
-                            //used Strutstyle to maintain lineheight
-                            // "Log in",
-                            style: TTextTheme.lightTextTheme.headlineSmall
-                                ?.copyWith(color: Colors.white),
+                            style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(color: Colors.white),
                           ),
+
                         ),
                       ),
                 ],
@@ -349,14 +382,22 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
-// final decoded = jsonDecode(response.body);
-// if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
-//   final userData = UserModel.fromJson(decoded['data']);
+
+//     //convert JSON to dart obj
+//     final decoded = jsonDecode(response.body);
+//     if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
+//       //access data from object
+//       final userData = decoded['data'];
 //
-//   if (!mounted) return;
-//   ScaffoldMessenger.of(context).showSnackBar(
-//     SnackBar(
-//       content: Text('Login successful! Welcome ${userData.firstname} ${userData.lastname}'),
-//     ),
-//   );
-// }
+//       //from data it will access first_name and last_name
+//       final firstName = userData['first_name'];
+//       final lastName = userData['last_name'];
+//
+//       //will check whether that widget is in widget screen or not
+//       if (!mounted) return;
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(
+//           content: Text('Login successful! Welcome $firstName $lastName'),
+//         ),
+//       );
+//     }

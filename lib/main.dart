@@ -40,8 +40,9 @@ class _MyAppState extends State<MyApp> {
       // home: Login(onLocaleChange: _changeLanguage, locale: _locale),
       // darkTheme: TAppTheme.darkTheme,
       // themeMode: ThemeMode.system,
-      home: HomePage()
-      // home: OnBoardingPage(),
+      // home: HomePage()
+      home: OnBoardingPage(locale: _locale,
+        onLocaleChange: _changeLanguage,),
     );
   }
 }
