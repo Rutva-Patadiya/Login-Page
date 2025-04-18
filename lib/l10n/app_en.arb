@@ -11,6 +11,18 @@
   "onBoardText2": "Spend money abroad, and track your expense",
   "onBoardText3": "Receive Money From Anywhere In The World",
   "next": "Next",
-  "getStarted": "Get Started"
+  "getStarted": "Get Started",
+  "spending": "Spending",
+  "income": "Income",
+  "bills": "Bills",
+  "savings": "Savings",
+  "bank": "Bank",
+  "send": "Send",
+  "request": "Request",
+  "transaction":"Transaction",
+  "add": "Add",
+  "money": "Money",
+  "available_balance": "Available Balance",
+  "search_payment": "Search \"Payment\""
 
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:login/on_boarding_page.dart';
 import 'package:login/utils/theme/theme.dart';
+// import 'home_page.dart';
 import 'home_page.dart';
 import 'l10n/app_localizations.dart';
-import 'login.dart';
+// import 'login.dart';
 
 void main() {
   runApp(MyApp());
@@ -40,9 +41,9 @@ class _MyAppState extends State<MyApp> {
       // home: Login(onLocaleChange: _changeLanguage, locale: _locale),
       // darkTheme: TAppTheme.darkTheme,
       // themeMode: ThemeMode.system,
-      // home: HomePage()
-      home: OnBoardingPage(locale: _locale,
-        onLocaleChange: _changeLanguage,),
+      home: HomePage(onLocaleChange: (Locale p1) {  }, locale: Locale('en'),)
+      // home: OnBoardingPage(locale: _locale,
+      //   onLocaleChange: _changeLanguage,),
     );
   }
 }

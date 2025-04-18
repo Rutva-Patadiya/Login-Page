@@ -11,5 +11,17 @@
   "onBoardText2": "विदेश में पैसे खर्च करें, और अपने खर्च को ट्रैक करें",
   "onBoardText3": "दुनिया में कहीं से भी पैसा प्राप्त करें",
   "next": "आगे",
-  "getStarted": "शुरू करें"
+  "getStarted": "शुरू करें",
+  "spending": "खर्च",
+  "income": "आय",
+  "bills": "बिल",
+  "saving": "बचत",
+  "bank": "बैंक",
+  "send": "भेजें",
+  "transaction": "व्यवहार",
+  "request": "अनुरोध करें",
+  "add": "जोड़ें",
+  "money": "पैसे",
+  "available_balance": "उपलब्ध शेष राशि",
+  "search_payment": "\"पेमेंट\" खोजें"
 }

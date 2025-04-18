@@ -11,5 +11,18 @@
   "onBoardText2": "Dépensez de l'argent à l'étranger et suivez vos dépenses",
   "onBoardText3": "Recevez de l'argent de partout dans le monde",
   "next": "Suivant",
-  "getStarted": "Commencer"
+  "getStarted": "Commencer",
+  "spending": "Dépenses",
+  "income": "Revenu",
+  "bills": "Factures",
+  "saving": "Épargne",
+  "bank": "Banque",
+  "send": "Envoyer",
+  "transaction": "trah-zahk-syon",
+  "request": "Demander",
+  "add": "Ajouter",
+  "money": "Argent",
+  "available_balance": "Solde disponible",
+  "search_payment": "Rechercher \"Paiement\""
+
 }

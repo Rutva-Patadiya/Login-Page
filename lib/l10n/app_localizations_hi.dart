@@ -43,4 +43,40 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get getStarted => 'शुरू करें';
+
+  @override
+  String get spending => 'खर्च';
+
+  @override
+  String get income => 'आय';
+
+  @override
+  String get bills => 'बिल';
+
+  @override
+  String get savings => 'Savings';
+
+  @override
+  String get bank => 'बैंक';
+
+  @override
+  String get send => 'भेजें';
+
+  @override
+  String get request => 'अनुरोध करें';
+
+  @override
+  String get transaction => 'व्यवहार';
+
+  @override
+  String get add => 'जोड़ें';
+
+  @override
+  String get money => 'पैसे';
+
+  @override
+  String get available_balance => 'उपलब्ध शेष राशि';
+
+  @override
+  String get search_payment => '\"पेमेंट\" खोजें';
 }

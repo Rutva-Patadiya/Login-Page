@@ -43,4 +43,40 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get getStarted => 'Commencer';
+
+  @override
+  String get spending => 'Dépenses';
+
+  @override
+  String get income => 'Revenu';
+
+  @override
+  String get bills => 'Factures';
+
+  @override
+  String get savings => 'Savings';
+
+  @override
+  String get bank => 'Banque';
+
+  @override
+  String get send => 'Envoyer';
+
+  @override
+  String get request => 'Demander';
+
+  @override
+  String get transaction => 'trah-zahk-syon';
+
+  @override
+  String get add => 'Ajouter';
+
+  @override
+  String get money => 'Argent';
+
+  @override
+  String get available_balance => 'Solde disponible';
+
+  @override
+  String get search_payment => 'Rechercher \"Paiement\"';
 }
