@@ -1,0 +1,19 @@
+
+{
+  "@@locale": "en",
+  "hello": "Hello!",
+  "loginTitle": "Log in to E-Mart",
+  "loginSubTitle": "Enter your registered email id to log in.",
+  "email": "Email",
+  "password": "Password",
+  "forgotPassword": "Forgot Password?",
+  "loginButton": "Log in",
+  "onBoardText1": "Trusted by millions of people, part of one part",
+  "onBoardText2": "Spend money abroad, and track your expense",
+  "onBoardText3": "Receive Money From Anywhere In The World",
+  "next": "Next",
+  "getStarted": "Get Started"
+
+}
+
+
