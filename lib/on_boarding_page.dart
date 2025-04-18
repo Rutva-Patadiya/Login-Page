@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:login/dot_indicator.dart';
+import 'package:login/l10n/context_extension.dart';
 import 'package:login/utils/theme/elevated_button_theme.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'login.dart';
 
 class OnBoardingPage extends StatefulWidget {
-  const OnBoardingPage({super.key});
+  final Locale locale;
+  final Function(Locale) onLocaleChange;
+
+  const OnBoardingPage({super.key, required this.locale,required this.onLocaleChange,});
 
   @override
   State<OnBoardingPage> createState() => _OnBoardingScreenState();
@@ -46,22 +50,23 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
               controller: _controller,
               children: [
                 BoardingPage(
-                  image: AssetImage("asset/images/on_boarding_image.png"),
+                    image: AssetImage("asset/images/on_boarding_image.png"),
 
-                  // text: "Trusted by millions of people, part of one part",
-                  text: AppLocalizations.of(context)!.onBoardText3,
+                    // text: "Trusted by millions of people, part of one part",
+                    text:context.loc.onBoardText3
+                  // AppLocalizations.of(context)!.onBoardText3,
                 ),
 
                 BoardingPage(
                   image: AssetImage("asset/images/coinpay_receive_money.png"),
                   // text: "Spend money abroad, and track your expense",
-                  text: AppLocalizations.of(context)!.onBoardText2,
+                  text: context.loc.onBoardText2,
                 ),
 
                 BoardingPage(
                   image: AssetImage("asset/images/send_money.png"),
                   // text: "Receive Money From Anywhere In The World",
-                  text: AppLocalizations.of(context)!.onBoardText1,
+                  text: context.loc.onBoardText1,
                 ),
               ],
             ),
@@ -87,7 +92,7 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
                 } else {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => Login(onLocaleChange: _changeLanguage,locale: _locale)),
+                    MaterialPageRoute(builder: (context) => Login(onLocaleChange: widget.onLocaleChange,locale: _locale)),
                   );
                 }
               },
