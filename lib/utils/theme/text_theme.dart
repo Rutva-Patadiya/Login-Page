@@ -4,6 +4,7 @@ class TTextTheme {
   TTextTheme._();
 
   static TextTheme lightTextTheme = TextTheme(
+titleMedium: TextStyle(fontSize: 32,fontFamily: 'Poppins'),
     displayLarge: TextStyle(fontFamily: 'Poppins', fontSize: 28),
 
     displayMedium: TextStyle(fontSize: 24),
