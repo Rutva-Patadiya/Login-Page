@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:login/login.dart';
 import 'package:login/on_boarding_page.dart';
 import 'package:login/utils/theme/theme.dart';
-// import 'home_page.dart';
 import 'home_page.dart';
 import 'l10n/app_localizations.dart';
 // import 'login.dart';
@@ -38,25 +38,12 @@ class _MyAppState extends State<MyApp> {
       // locale: const Locale('en'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      // home: Login(onLocaleChange: _changeLanguage, locale: _locale),
+      home: Login(onLocaleChange: _changeLanguage, locale: _locale),
       // darkTheme: TAppTheme.darkTheme,
       // themeMode: ThemeMode.system,
-      home: HomePage(onLocaleChange: (Locale p1) {  }, locale: Locale('en'),)
+      // home: HomePage(onLocaleChange: (Locale p1) {  }, locale: Locale('en'),)
       // home: OnBoardingPage(locale: _locale,
       //   onLocaleChange: _changeLanguage,),
     );
   }
 }
-
-// class HomePage extends StatelessWidget {
-//   const HomePage({super.key});
-//
-//   @override
-//   Widget build(BuildContext context)
-//   {
-//
-//     return Scaffold(
-//         body:Center(child: Text(AppLocalizations.of(context)!.hello)));
-//   }
-//
-// }

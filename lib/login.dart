@@ -146,11 +146,11 @@ class _LoginState extends State<Login> {
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('fr'),
-                                  child: Text('French',style:TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text('français',style:TTextTheme.lightTextTheme.labelMedium),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('gu'),
-                                  child: Text('Guj',style:TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text('ગુજ',style:TTextTheme.lightTextTheme.labelMedium),
                                 ),
                               ],
                               underline: Container(
