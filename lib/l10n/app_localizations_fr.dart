@@ -54,7 +54,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bills => 'Factures';
 
   @override
-  String get savings => 'Savings';
+  String get saving => 'Épargne';
 
   @override
   String get bank => 'Banque';

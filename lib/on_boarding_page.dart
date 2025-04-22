@@ -3,14 +3,12 @@ import 'package:login/dot_indicator.dart';
 import 'package:login/l10n/context_extension.dart';
 import 'package:login/utils/theme/elevated_button_theme.dart';
 import 'package:login/utils/theme/text_theme.dart';
-import 'l10n/app_localizations.dart';
+// import 'l10n/app_localizations.dart';
+// import 'local_provider.dart';
 import 'login.dart';
 
 class OnBoardingPage extends StatefulWidget {
-  final Locale locale;
-  final Function(Locale) onLocaleChange;
-
-  const OnBoardingPage({super.key, required this.locale,required this.onLocaleChange,});
+  const OnBoardingPage({super.key});
 
   @override
   State<OnBoardingPage> createState() => _OnBoardingScreenState();
@@ -19,7 +17,8 @@ class OnBoardingPage extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingPage> {
   final PageController _controller = PageController();
   int _currentPage = 0;
-  Locale _locale = const Locale('en'); // default
+
+
 
   @override
   void initState() {
@@ -31,16 +30,17 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
     });
   }
 
-
-  void _changeLanguage(Locale newLocale) {
-    setState(() {
-      _locale = newLocale;
-    });
-  }
+  //
+  // void _changeLanguage(Locale newLocale) {
+  //   setState(() {
+  //     locale = newLocale;
+  //   });
+  // }
 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Column(
         children: [
@@ -92,7 +92,7 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
                 } else {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => Login(onLocaleChange: widget.onLocaleChange,locale: _locale)),
+                    MaterialPageRoute(builder: (context) => Login()),
                   );
                 }
               },

@@ -5,13 +5,10 @@ import 'package:login/l10n/context_extension.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'package:circle_flags/circle_flags.dart';
-// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
     super.key,
-    required Function(Locale p1) onLocaleChange,
-    required Locale locale,
   });
 
   @override
@@ -20,26 +17,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String selectedCurrency = "US Dollar";
-
   int currentPageIndex = 0;
 
   // for display pages of bottom navigation bar
-
-  final List<String> _page = [
-    'You are on Stats Page',
-    'You are on Scan Page',
-    'You are on Chat Page',
-    'You are on Profile Page',
-  ];
-
-  //for display pages of bottom navigation bar
-  //   final List<Widget> _pages = [
-  //     Center(child: Text('Welcome to Home', style: TextStyle(fontSize: 18))),
-  //     Center(child: Text('Pie Chart Page')),
-  //     Center(child: Text('QR Scanner Page')),
-  //     Center(child: Text('Chat Page')),
-  //     Center(child: Text('Profile Page')),
-  //   ];
   @override
   Widget build(BuildContext context) {
     //for adjusting the color of status bar
@@ -243,6 +223,35 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: [
+                                          CircleFlag('in', size: 15),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "In Rupee",
+                                            style: TTextTheme
+                                                .lightTextTheme
+                                                .labelMedium
+                                                ?.copyWith(
+                                                  color: Colors.white70,
+                                                ),
+                                          ),
+                                        ],
+                                      ),  Row(
+                                        children: [
+                                          CircleFlag('ca', size: 15),
+                                          SizedBox(width: 5),
+                                          Text(
+                                            "Ca Dollar",
+                                            style: TTextTheme
+                                                .lightTextTheme
+                                                .labelMedium
+                                                ?.copyWith(
+                                                  color: Colors.white70,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
                                     ];
                                   },
                                   onChanged: (value) {
@@ -327,8 +336,9 @@ class _HomePageState extends State<HomePage> {
 
                 Stack(
                   clipBehavior: Clip.none, // Allows child to overflow upwards
-                  alignment: Alignment.topCenter,
+                  // alignment: Alignment.topCenter,
                   children: [
+                   
                     // Grey container below
                     Container(
                       height: 350, // Just a spacer to reserve height
@@ -365,12 +375,13 @@ class _HomePageState extends State<HomePage> {
                             //container After transaction
                             Container(
                               margin: EdgeInsets.symmetric(
-                                horizontal: 20,
+                                horizontal: 10,//
                                 vertical: 5,
                               ),
                               child: Container(
-                                height: 290,
-                                width: 320,
+                                // height: 290,
+                                // width: 320,
+                                margin:EdgeInsets.symmetric(vertical: 10,horizontal: 10),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
@@ -601,7 +612,7 @@ class _HomePageState extends State<HomePage> {
                                           ),
 
                                           Text(
-                                            context.loc.savings,
+                                            context.loc.saving,
                                             style: TTextTheme
                                                 .lightTextTheme
                                                 .headlineSmall
@@ -769,39 +780,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-// bottomNavigationBar: BottomNavigationBar(
-//   // type: BottomNavigationBarType.fixed, // To keep all 5 items visible
-//   currentIndex: _selectedIndex,
-//   onTap: (index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-//   },
-//   selectedItemColor: Colors.blue,
-//   unselectedItemColor: Colors.black54,
-//
-//   items: [
-//     BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-//     BottomNavigationBarItem(icon: Icon(Icons.pie_chart), label: ''),
-//     BottomNavigationBarItem(
-//       icon: Container(
-//         height: 50,
-//         width: 50,
-//         decoration: BoxDecoration(
-//           color: Colors.blue,
-//           borderRadius: BorderRadius.circular(15),
-//         ),
-//         child: Icon(Icons.qr_code_scanner, color: Colors.white, size: 26),
-//       ),
-//       label: '',
-//     ),
-//     BottomNavigationBarItem(
-//       icon: Icon(Icons.chat_bubble_outline),
-//       label: '',
-//     ),
-//     BottomNavigationBarItem(
-//       icon: Icon(Icons.person_outline),
-//       label: '',
-//     ),
-//   ],
-// ),

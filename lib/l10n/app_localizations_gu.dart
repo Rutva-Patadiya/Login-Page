@@ -54,7 +54,7 @@ class AppLocalizationsGu extends AppLocalizations {
   String get bills => 'બિલ્સ';
 
   @override
-  String get savings => 'Savings';
+  String get saving => 'બચત';
 
   @override
   String get bank => 'બેંક';

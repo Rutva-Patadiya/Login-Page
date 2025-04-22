@@ -3,42 +3,51 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:login/l10n/context_extension.dart';
+
 // import 'package:login/on_boarding_page.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'home_page.dart';
+import 'package:login/local_provider.dart';
 import 'models/user_model.dart';
 
 class Login extends StatefulWidget {
   //const because we can reuse it not everytime rebuild it
-  final Function(Locale) onLocaleChange;
-  final Locale locale;
-  const Login({required this.onLocaleChange, required this.locale, super.key});
+
+  const Login({super.key});
+
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
   //final assign only once
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  Locale selectedLocale= const Locale('Eng');
+  Locale selectedLocale = const Locale('Eng');
   bool _isLoading = false;
   bool obscureText = true;
 
   @override
   void initState() {
     super.initState();
-    selectedLocale = widget.locale;
+
+    // This delays the code until after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final localeProvider = LocaleProvider.of(context);
+      setState(() {
+        selectedLocale = localeProvider.selectedLocale;
+      });
+    });
   }
 
   //Authenticate user mail and password using API
   Future<void> _loginUser() async {
     setState(() {
       _isLoading = true; // Start loading
-
     });
 
     //uri.parse will convert the api into URI object format like scheme:https,host,path
@@ -71,17 +80,22 @@ class _LoginState extends State<Login> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Login successful! Welcome ${userData.firstname} ${userData.lastname}'),
+            content: Text(
+              'Login successful! Welcome ${userData.firstname} ${userData.lastname}',
+            ),
           ),
         );
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(onLocaleChange: widget.onLocaleChange,locale:widget.locale)),
-        );
-      }
+          MaterialPageRoute(
+            builder:
+                (context) => HomePage(
 
-      else {
+                ),
+          ),
+        );
+      } else {
         final errorMessage = decoded['message'] ?? 'Login failed. Try again.';
 
         //first it will check whether that widget is alive in widget tree or not
@@ -104,6 +118,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final localeProvider = LocaleProvider.of(context);
     return Scaffold(
       // appBar: AppBar(title: const Text("Log in to Inventory Management")),
       body: Padding(
@@ -118,54 +133,42 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 30),
-                
+
                     Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left:220),
-                          child: SizedBox(width:100,
-                            child: DropdownButton<Locale>(
-                              value: selectedLocale,
+                          padding: const EdgeInsets.only(left: 220),
+                          child: SizedBox(
+                            width: 100,
+                            child:DropdownButton<Locale>(
+                              value: localeProvider.selectedLocale,
                               onChanged: (Locale? newLocale) {
                                 if (newLocale != null) {
-                                  setState(() {
-                                    selectedLocale = newLocale;
-                                  });
-                                  widget.onLocaleChange(newLocale);
+                                  localeProvider.onLocaleChange(newLocale);
                                 }
-                              },// Use widget.locale for current value
-                              icon:Icon(Icons.arrow_drop_down,size:20),
+                              },
+                              icon: const Icon(Icons.arrow_drop_down, size: 20),
+                              underline: Container(height: 0),
                               items: [
                                 DropdownMenuItem(
                                   value: const Locale('en'),
-                                  child: Text('Eng',style:TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text('Eng', style: TTextTheme.lightTextTheme.labelMedium),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('hi'),
-                                  child: Text('हिंदी',style:TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text('हिंदी', style: TTextTheme.lightTextTheme.labelMedium),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('fr'),
-                                  child: Text('français',style:TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text('français', style: TTextTheme.lightTextTheme.labelMedium),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('gu'),
-                                  child: Text('ગુજ',style:TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text('ગુજ', style: TTextTheme.lightTextTheme.labelMedium),
                                 ),
                               ],
-                              underline: Container(
-                                height: 0,
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 0.0,
-                                    ),
-                                  ),
-                                ),
-                
-                              ),
-                            ),
+                            )
+
                           ),
                         ),
                       ],
@@ -190,7 +193,7 @@ class _LoginState extends State<Login> {
                     ),
                     SizedBox(height: 26),
                     CustomTextField(
-                      label:context.loc.email,
+                      label: context.loc.email,
                       // AppLocalizations.of(context)!.email,
                       keyboardType: TextInputType.emailAddress,
                       hint: "abc@example.com",
@@ -214,12 +217,12 @@ class _LoginState extends State<Login> {
                       prefixIcon: Icons.mail_outline,
                       suffixIcon: null,
                     ),
-                
+
                     SizedBox(height: 16),
                     CustomTextField(
-                      label:context.loc.password,
+                      label: context.loc.password,
                       // AppLocalizations.of(context)!.password,
-                      keyboardType:TextInputType.text,
+                      keyboardType: TextInputType.text,
                       hint: context.loc.password,
                       hintStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
                         color: Colors.black38,
@@ -251,7 +254,6 @@ class _LoginState extends State<Login> {
                         onPressed: () {
                           setState(() {
                             obscureText = !obscureText;
-                
                           });
                         },
                       ),
@@ -263,33 +265,32 @@ class _LoginState extends State<Login> {
                           context.loc.forgotPassword,
                           // AppLocalizations.of(context)!.forgotPassword,
                           // "Forgot Password?",
-                          style: TTextTheme.lightTextTheme.labelMedium?.copyWith(
-                            color: AppColors.bgAccent,
-                          ),
+                          style: TTextTheme.lightTextTheme.labelMedium
+                              ?.copyWith(color: AppColors.bgAccent),
                         ),
                       ),
                     ),
                     SizedBox(height: 18),
-                
+
                     _isLoading
                         ? Center(child: CircularProgressIndicator())
                         : ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _loginUser();
-                        }
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 6),
-                        child: Text(
-                          context.loc.loginButton,
-                          // AppLocalizations.of(context)!.loginButton, // or simply "Log In"
-                          strutStyle: StrutStyle(leading: 1.5),
-                          style: TTextTheme.lightTextTheme.headlineSmall?.copyWith(color: Colors.white),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _loginUser();
+                            }
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 6),
+                            child: Text(
+                              context.loc.loginButton,
+                              // AppLocalizations.of(context)!.loginButton, // or simply "Log In"
+                              strutStyle: StrutStyle(leading: 1.5),
+                              style: TTextTheme.lightTextTheme.headlineSmall
+                                  ?.copyWith(color: Colors.white),
+                            ),
+                          ),
                         ),
-                
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -369,7 +370,6 @@ class CustomTextField extends StatelessWidget {
     );
   }
 }
-
 
 //     //convert JSON to dart obj
 //     final decoded = jsonDecode(response.body);
