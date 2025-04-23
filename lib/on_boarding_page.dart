@@ -18,8 +18,6 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
   final PageController _controller = PageController();
   int _currentPage = 0;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -30,17 +28,8 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
     });
   }
 
-  //
-  // void _changeLanguage(Locale newLocale) {
-  //   setState(() {
-  //     locale = newLocale;
-  //   });
-  // }
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Column(
         children: [
@@ -53,7 +42,7 @@ class _OnBoardingScreenState extends State<OnBoardingPage> {
                   image: AssetImage("asset/images/on_boarding_image.png"),
 
                   // text: "Trusted by millions of people, part of one part",
-                  text:context.loc.onBoardText3
+                  text: context.loc.onBoardText3,
                   // AppLocalizations.of(context)!.onBoardText3,
                 ),
 

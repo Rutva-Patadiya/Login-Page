@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:login/l10n/context_extension.dart';
+import 'package:login/login.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'package:circle_flags/circle_flags.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key,
-  });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -47,10 +46,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.qr_code_scanner_sharp),
             label: '',
           ),
-          NavigationDestination(
-            icon: Badge(child: Icon(Icons.message)),
-            label: '',
-          ),
+          NavigationDestination(icon: Icon(Icons.message), label: ''),
           NavigationDestination(icon: Icon(Icons.person), label: ''),
         ],
       ),
@@ -162,9 +158,7 @@ class _HomePageState extends State<HomePage> {
                                             style: TTextTheme
                                                 .lightTextTheme
                                                 .labelMedium
-                                                ?.copyWith(
-                                                  color: Colors.black,
-                                                ),
+                                                ?.copyWith(color: Colors.black),
                                           ),
                                         ],
                                       ),
@@ -180,9 +174,7 @@ class _HomePageState extends State<HomePage> {
                                             style: TTextTheme
                                                 .lightTextTheme
                                                 .labelMedium
-                                                ?.copyWith(
-                                                  color: Colors.black,
-                                                ),
+                                                ?.copyWith(color: Colors.black),
                                           ),
                                         ],
                                       ),
@@ -198,9 +190,7 @@ class _HomePageState extends State<HomePage> {
                                             style: TTextTheme
                                                 .lightTextTheme
                                                 .labelMedium
-                                                ?.copyWith(
-                                                  color: Colors.black,
-                                                ),
+                                                ?.copyWith(color: Colors.black),
                                           ),
                                         ],
                                       ),
@@ -237,7 +227,8 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                           ),
                                         ],
-                                      ),  Row(
+                                      ),
+                                      Row(
                                         children: [
                                           CircleFlag('ca', size: 15),
                                           SizedBox(width: 5),
@@ -296,10 +287,7 @@ class _HomePageState extends State<HomePage> {
                               borderRadius: BorderRadius.all(
                                 Radius.circular(32),
                               ),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(11.0),
@@ -338,7 +326,6 @@ class _HomePageState extends State<HomePage> {
                   clipBehavior: Clip.none, // Allows child to overflow upwards
                   // alignment: Alignment.topCenter,
                   children: [
-                   
                     // Grey container below
                     Container(
                       height: 350, // Just a spacer to reserve height
@@ -375,13 +362,16 @@ class _HomePageState extends State<HomePage> {
                             //container After transaction
                             Container(
                               margin: EdgeInsets.symmetric(
-                                horizontal: 10,//
+                                horizontal: 10, //
                                 vertical: 5,
                               ),
                               child: Container(
                                 // height: 290,
                                 // width: 320,
-                                margin:EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 10,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
@@ -465,8 +455,7 @@ class _HomePageState extends State<HomePage> {
                                               vertical: 15,
                                             ),
                                             child: CircleAvatar(
-                                              backgroundColor:
-                                                  AppColors.lGreen,
+                                              backgroundColor: AppColors.lGreen,
                                               child: Center(
                                                 child: FaIcon(
                                                   FontAwesomeIcons.coins,
@@ -505,8 +494,7 @@ class _HomePageState extends State<HomePage> {
                                                       .headlineSmall
                                                       ?.copyWith(
                                                         color:
-                                                            AppColors
-                                                                .darkGreen,
+                                                            AppColors.darkGreen,
                                                       ),
                                                 ),
                                                 Icon(
@@ -636,8 +624,7 @@ class _HomePageState extends State<HomePage> {
                                                       .lightTextTheme
                                                       .headlineSmall
                                                       ?.copyWith(
-                                                        color:
-                                                            AppColors.orange,
+                                                        color: AppColors.orange,
                                                       ),
                                                 ),
                                                 Icon(
@@ -771,12 +758,25 @@ class _HomePageState extends State<HomePage> {
             const Center(child: Text("Pie chart page")),
             const Center(child: Text("QR Code Scanner page")),
             const Center(child: Text("Messages page")),
-            const Center(child: Text("Person page")),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // SizedBox(height: 100),
+                Text("Person page"),
+                Center(
+                  child: ElevatedButton(onPressed:() {
+                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>Login()),
+                    );
+                    // Login();
+                  }, child: Text("Log Out")),
+
+                )
+              ],
+            ),
 
             /// Messages page
           ][currentPageIndex],
-
-
     );
   }
 }

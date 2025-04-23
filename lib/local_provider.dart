@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 
 class LocaleProvider extends InheritedWidget {
@@ -14,7 +13,7 @@ class LocaleProvider extends InheritedWidget {
 
   static LocaleProvider of(BuildContext context) {
     final LocaleProvider? result =
-    context.dependOnInheritedWidgetOfExactType<LocaleProvider>();
+        context.dependOnInheritedWidgetOfExactType<LocaleProvider>();
     assert(result != null, 'No LocaleProvider found in context');
     return result!;
   }

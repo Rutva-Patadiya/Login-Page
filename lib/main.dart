@@ -1,16 +1,25 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
-// import 'package:login/login.dart';
+import 'package:login/home_page.dart';
+import 'package:login/login.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'l10n/app_localizations.dart';
 import 'local_provider.dart';
 import 'on_boarding_page.dart';
+import 'local_storage.dart';
 
-void main() {
-  runApp(MyAppWrapper());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); //checks app is initialized
+  final savedLocale = await LocaleStorage.getSavedLocale();  //get saved locale from local_storage [this method returns the locale obj]
+  final savedPage = await LocaleStorage.getSavedPage();
+  runApp(MyAppWrapper(initialLocale: savedLocale,initialPage: savedPage));
 }
 
 class MyAppWrapper extends StatefulWidget {
-  const MyAppWrapper({super.key});
+  final Locale initialLocale;
+  final bool initialPage;//modified for page
+  const MyAppWrapper({super.key, required this.initialLocale, required this.initialPage}); //passed savedLocale
 
   @override
   State<MyAppWrapper> createState() => _MyAppWrapperState();
@@ -19,10 +28,19 @@ class MyAppWrapper extends StatefulWidget {
 class _MyAppWrapperState extends State<MyAppWrapper> {
   Locale _locale = const Locale('en');
 
+  //for shared preference
+  @override
+  void initState() {
+    super.initState();
+    _locale = widget.initialLocale;
+    // initialize from main() [widget] for accessing the property of parent stateful widget
+  }
+
   void _changeLocale(Locale newLocale) {
     setState(() {
       _locale = newLocale;
     });
+    LocaleStorage.saveLocale(newLocale.languageCode);
   }
 
   @override
@@ -30,13 +48,16 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
     return LocaleProvider(
       selectedLocale: _locale,
       onLocaleChange: _changeLocale,
-      child: const MyApp(),
+      //modified
+      child: MyApp(initialPage:widget.initialPage,),
     );
   }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool initialPage;
+
+  const MyApp({super.key,required this.initialPage});
 
   @override
   Widget build(BuildContext context) {
@@ -51,111 +72,48 @@ class MyApp extends StatelessWidget {
       // Apply current locale
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-        home: OnBoardingPage(),
+
+        //modified for page
+        home: initialPage? HomePage(): OnBoardingPage(),
       // home: Login(),
     );
   }
 }
 
-// import 'package:flutter/material.dart';
-// import 'package:login/login.dart';
-// // import 'package:login/on_boarding_page.dart';
-// import 'package:login/utils/theme/theme.dart';
-// // import 'home_page.dart';
-// import 'l10n/app_localizations.dart';
-// import 'local_provider.dart';
-// // import 'login.dart';
-//
-// void main() {
-//   runApp(MyAppWrapper());
-// }
-//
-//
-//
-//
-// class MyAppWrapper extends StatefulWidget {
-//   const MyAppWrapper({super.key});
+// stateless to stateful to hold locales
+// class MyApp extends StatefulWidget {
+//   const MyApp({super.key});
 //
 //   @override
-//   State<MyAppWrapper> createState() => _MyAppWrapperState();
+//   State<MyApp> createState() => _MyAppState();
 // }
 //
-// class _MyAppWrapperState extends State<MyAppWrapper> {
-//   Locale _locale = const Locale('en');
+// class _MyAppState extends State<MyApp> {
+//   Locale _locale = const Locale('en'); // default
 //
-//   void _changeLocale(Locale newLocale) {
+//   void _changeLanguage(Locale newLocale) {
 //     setState(() {
 //       _locale = newLocale;
 //     });
 //   }
 //
+//   // This widget is the root of your application.
 //   @override
 //   Widget build(BuildContext context) {
-//     return LocaleProvider(
-//       selectedLocale: _locale,
-//       onLocaleChange: _changeLocale,
-//       child: const MyApp(), // your actual app
-//     );
-//   }
-// }
-//
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     // Access the current locale from LocaleProvider
-//     final localeProvider = LocaleProvider.of(context);
-//     final _locale = localeProvider.selectedLocale;  // Get the current locale
-//
-//     return LocaleProvider(selectedLocale: _locale, onLocaleChange: , child:aterialApp(
+//     return MaterialApp(
 //       debugShowCheckedModeBanner: false,
 //       title: 'Login Page',
 //       theme: TAppTheme.lightTheme,
-//       locale: _locale,  // Apply the locale globally from the provider
+//       locale: _locale,
+//       // locale: const Locale('en'),
 //       localizationsDelegates: AppLocalizations.localizationsDelegates,
 //       supportedLocales: AppLocalizations.supportedLocales,
-//       home: Login(onLocaleChange: localeProvider.onLocaleChange, locale: _locale),
-//     ) );
-//
-//
+//       home: Login(onLocaleChange: _changeLanguage, locale: _locale),
+//       // darkTheme: TAppTheme.darkTheme,
+//       // themeMode: ThemeMode.system,
+//       // home: HomePage(onLocaleChange: (Locale p1) {  }, locale: Locale('en'),)
+//       // home: OnBoardingPage(locale: _locale,
+//       //   onLocaleChange: _changeLanguage,),
+//     );
 //   }
 // }
-// //stateless to stateful to hold locales
-// // class MyApp extends StatefulWidget {
-// //   const MyApp({super.key});
-// //
-// //   @override
-// //   State<MyApp> createState() => _MyAppState();
-// // }
-// //
-// // class _MyAppState extends State<MyApp> {
-// //   Locale _locale = const Locale('en'); // default
-// //
-// //   void _changeLanguage(Locale newLocale) {
-// //     setState(() {
-// //       _locale = newLocale;
-// //     });
-// //   }
-// //
-// //   // This widget is the root of your application.
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return MaterialApp(
-// //       debugShowCheckedModeBanner: false,
-// //       title: 'Login Page',
-// //       theme: TAppTheme.lightTheme,
-// //       locale: _locale,
-// //       // locale: const Locale('en'),
-// //       localizationsDelegates: AppLocalizations.localizationsDelegates,
-// //       supportedLocales: AppLocalizations.supportedLocales,
-// //       home: Login(onLocaleChange: _changeLanguage, locale: _locale),
-// //       // darkTheme: TAppTheme.darkTheme,
-// //       // themeMode: ThemeMode.system,
-// //       // home: HomePage(onLocaleChange: (Locale p1) {  }, locale: Locale('en'),)
-// //       // home: OnBoardingPage(locale: _locale,
-// //       //   onLocaleChange: _changeLanguage,),
-// //     );
-// //   }
-// // }

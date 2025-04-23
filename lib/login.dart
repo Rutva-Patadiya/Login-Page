@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:login/l10n/context_extension.dart';
-
-// import 'package:login/on_boarding_page.dart';
+import 'package:login/local_storage.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'home_page.dart';
@@ -77,6 +77,11 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
         final userData = UserModel.fromJson(decoded['data']);
 
+
+        //added fro update true isloggedin
+
+        await LocaleStorage.savePage(true);
+
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -88,12 +93,7 @@ class _LoginState extends State<Login> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder:
-                (context) => HomePage(
-
-                ),
-          ),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
         final errorMessage = decoded['message'] ?? 'Login failed. Try again.';
@@ -140,7 +140,7 @@ class _LoginState extends State<Login> {
                           padding: const EdgeInsets.only(left: 220),
                           child: SizedBox(
                             width: 100,
-                            child:DropdownButton<Locale>(
+                            child: DropdownButton<Locale>(
                               value: localeProvider.selectedLocale,
                               onChanged: (Locale? newLocale) {
                                 if (newLocale != null) {
@@ -152,23 +152,38 @@ class _LoginState extends State<Login> {
                               items: [
                                 DropdownMenuItem(
                                   value: const Locale('en'),
-                                  child: Text('Eng', style: TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text(
+                                    'Eng',
+                                    style:
+                                        TTextTheme.lightTextTheme.labelMedium,
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('hi'),
-                                  child: Text('हिंदी', style: TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text(
+                                    'हिंदी',
+                                    style:
+                                        TTextTheme.lightTextTheme.labelMedium,
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('fr'),
-                                  child: Text('français', style: TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text(
+                                    'français',
+                                    style:
+                                        TTextTheme.lightTextTheme.labelMedium,
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: const Locale('gu'),
-                                  child: Text('ગુજ', style: TTextTheme.lightTextTheme.labelMedium),
+                                  child: Text(
+                                    'ગુજ',
+                                    style:
+                                        TTextTheme.lightTextTheme.labelMedium,
+                                  ),
                                 ),
                               ],
-                            )
-
+                            ),
                           ),
                         ),
                       ],
@@ -328,7 +343,9 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.white,statusBarIconBrightness: Brightness.light));
     return Column(
+      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(

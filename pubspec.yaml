@@ -28,8 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+
   flutter:
     sdk: flutter
+
+  shared_preferences: ^2.2.2
 
   font_awesome_flutter: ^10.7.0
   circle_flags: ^2.0.0
