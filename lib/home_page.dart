@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:login/l10n/context_extension.dart';
+import 'package:login/local_storage.dart';
 import 'package:login/login.dart';
 import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
@@ -568,7 +569,6 @@ class _HomePageState extends State<HomePage> {
                                               ],
                                             ),
                                           ),
-
                                           // Arrow icon also aligned to the end
                                         ],
                                       ),
@@ -762,16 +762,28 @@ class _HomePageState extends State<HomePage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // SizedBox(height: 100),
-                Text("Person page"),
+                // Text("Person page"),
                 Center(
-                  child: ElevatedButton(onPressed:() {
-                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>Login()),
-                    );
-                    // Login();
-                  }, child: Text("Log Out")),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await LocaleStorage.savePage(false);
+                      await LocaleStorage.onBoard(true);
 
-                )
+                      if (context.mounted) {
+                        //before context is full ready using it
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      }
+                      // Login();
+                    },
+                    child: Text(
+                      "Log Out",
+                      style: TTextTheme.lightTextTheme.bodyLarge?.copyWith(color: Colors.white)
+                    ),
+                  ),
+                ),
               ],
             ),
 

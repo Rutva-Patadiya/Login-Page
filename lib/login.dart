@@ -77,10 +77,11 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
         final userData = UserModel.fromJson(decoded['data']);
 
-
-        //added fro update true isloggedin
+        //added for update true isloggedin
 
         await LocaleStorage.savePage(true);
+
+        await LocaleStorage.onBoard(true);
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
@@ -301,7 +302,7 @@ class _LoginState extends State<Login> {
                               context.loc.loginButton,
                               // AppLocalizations.of(context)!.loginButton, // or simply "Log In"
                               strutStyle: StrutStyle(leading: 1.5),
-                              style: TTextTheme.lightTextTheme.headlineSmall
+                              style: TTextTheme.lightTextTheme.bodyLarge
                                   ?.copyWith(color: Colors.white),
                             ),
                           ),
@@ -343,9 +344,13 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.white,statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
     return Column(
-      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(

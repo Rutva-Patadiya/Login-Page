@@ -29,4 +29,16 @@ class LocaleStorage
     return prefs.getBool(_key1) ?? false;
 
   }
+
+  static const String _key2='onBoardingPage';
+  static Future<void> onBoard(bool onboard) async{
+    final prefs=await SharedPreferences.getInstance();
+    await prefs.setBool(_key2,onboard);
+  }
+
+
+  static Future<bool> getBoardPage() async{
+    final prefs=await SharedPreferences.getInstance();
+    return prefs.getBool(_key2) ?? false;
+  }
 }

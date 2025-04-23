@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:login/home_page.dart';
 import 'package:login/login.dart';
@@ -11,15 +9,30 @@ import 'local_storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized(); //checks app is initialized
-  final savedLocale = await LocaleStorage.getSavedLocale();  //get saved locale from local_storage [this method returns the locale obj]
-  final savedPage = await LocaleStorage.getSavedPage();
-  runApp(MyAppWrapper(initialLocale: savedLocale,initialPage: savedPage));
+  final savedLocale = await LocaleStorage.getSavedLocale(); //get saved locale from local_storage [this method returns the locale obj]
+  final savedPage = await LocaleStorage.getSavedPage(); //for login page
+  final isOnboarded = await LocaleStorage.getBoardPage();
+
+  runApp(
+    MyAppWrapper(
+      initialLocale: savedLocale,
+      initialPage: savedPage,
+      isOnBoarded: isOnboarded,
+    ),
+  );
 }
 
 class MyAppWrapper extends StatefulWidget {
   final Locale initialLocale;
-  final bool initialPage;//modified for page
-  const MyAppWrapper({super.key, required this.initialLocale, required this.initialPage}); //passed savedLocale
+  final bool initialPage; //modified for page
+  final bool isOnBoarded;
+
+  const MyAppWrapper({
+    super.key,
+    required this.initialLocale,
+    required this.initialPage,
+    required this.isOnBoarded,
+  }); //passed savedLocale
 
   @override
   State<MyAppWrapper> createState() => _MyAppWrapperState();
@@ -49,20 +62,37 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
       selectedLocale: _locale,
       onLocaleChange: _changeLocale,
       //modified
-      child: MyApp(initialPage:widget.initialPage,),
+      child: MyApp(
+        initialPage: widget.initialPage,
+        isOnBoarded: widget.isOnBoarded,
+      ),
     );
   }
 }
 
 class MyApp extends StatelessWidget {
   final bool initialPage;
+  final bool isOnBoarded;
 
-  const MyApp({super.key,required this.initialPage});
+  const MyApp({
+    super.key,
+    required this.initialPage,//for checking loggedin is true or not
+    required this.isOnBoarded,
+  });
 
   @override
   Widget build(BuildContext context) {
+    Widget initialScreen;
     final localeProvider = LocaleProvider.of(context);
     final locale = localeProvider.selectedLocale;
+
+    if (!isOnBoarded) {
+      initialScreen = OnBoardingPage();
+    } else if (initialPage) {
+      initialScreen = HomePage();
+    } else {
+      initialScreen = Login();
+    }
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -72,30 +102,12 @@ class MyApp extends StatelessWidget {
       // Apply current locale
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-
-        //modified for page
-        home: initialPage? HomePage(): OnBoardingPage(),
+      home: initialScreen,
       // home: Login(),
     );
   }
 }
 
-// stateless to stateful to hold locales
-// class MyApp extends StatefulWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   State<MyApp> createState() => _MyAppState();
-// }
-//
-// class _MyAppState extends State<MyApp> {
-//   Locale _locale = const Locale('en'); // default
-//
-//   void _changeLanguage(Locale newLocale) {
-//     setState(() {
-//       _locale = newLocale;
-//     });
-//   }
 //
 //   // This widget is the root of your application.
 //   @override
