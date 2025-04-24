@@ -9,6 +9,7 @@ import 'package:login/utils/theme/text_theme.dart';
 import 'package:login/utils/theme/theme.dart';
 import 'home_page.dart';
 import 'package:login/local_provider.dart';
+import 'l10n/app_localizations.dart';
 import 'models/user_model.dart';
 
 class Login extends StatefulWidget {
@@ -52,6 +53,7 @@ class _LoginState extends State<Login> {
 
     //uri.parse will convert the api into URI object format like scheme:https,host,path
     final url = Uri.parse('https://tcd-dev-api.sandbox-dev.co.uk/api/v2/login');
+
     final Map<String, dynamic> bodyData = {
       'email': _emailController.text.trim(),
       'password': _passwordController.text.trim(),
@@ -79,22 +81,25 @@ class _LoginState extends State<Login> {
 
         //added for update true isloggedin
 
-        await LocaleStorage.savePage(true);
+        //passed token
+        await LocaleStorage.savePage(userData.token);
+        await LocaleStorage.saveFName(userData.firstname);
 
         await LocaleStorage.onBoard(true);
 
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Login successful! Welcome ${userData.firstname} ${userData.lastname}',
-            ),
+            content: Text('Login successful! Welcome ${userData.firstname}'),
           ),
         );
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(
+            builder:
+                (context) => HomePage(userData.firstname, userData.lastname,userData.token, null),
+          ),
         );
       } else {
         final errorMessage = decoded['message'] ?? 'Login failed. Try again.';
@@ -190,8 +195,8 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                     Text(
-                      context.loc.loginTitle,
-                      // AppLocalizations.of(context)!.loginTitle,
+                      // context.loc.loginTitle,
+                      AppLocalizations.of(context)!.loginTitle,
                       // "Log in to E-Mart",
                       style: TTextTheme.lightTextTheme.displayLarge?.copyWith(
                         fontWeight: FontWeight.bold,
@@ -347,7 +352,7 @@ class CustomTextField extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
       ),
     );
     return Column(

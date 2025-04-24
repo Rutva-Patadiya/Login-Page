@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:login/l10n/context_extension.dart';
 import 'package:login/local_storage.dart';
 import 'package:login/login.dart';
@@ -9,7 +11,9 @@ import 'package:login/utils/theme/theme.dart';
 import 'package:circle_flags/circle_flags.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String firstName, token,lastName;
+
+  const HomePage(this.firstName,this.lastName,this.token, Key? key) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,6 +22,67 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String selectedCurrency = "US Dollar";
   int currentPageIndex = 0;
+  bool _isLoading = false;
+
+  Future<void> logoutUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final url = Uri.parse(
+      'https://tcd-dev-api.sandbox-dev.co.uk/api/v2/logout',
+    );
+    final token = LocaleStorage.getSavedPage();
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'mode': 'fantasy',
+          'device': 'android',
+          'Authorization': 'Bearer $token', //token passed
+        },
+      );
+      // log('Status Code: ${response.statusCode}');
+      // log('Response Body: ${response.body}');
+
+      final decoded = jsonDecode(response.body);
+      if (response.statusCode == 200 && decoded['status'] == "SUCCESS") {
+        await LocaleStorage.savePage("null");
+        //added for update true isLoggedIn
+
+        await LocaleStorage.onBoard(false);
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Logout successful!')));
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Login()),
+        );
+      } else {
+        await LocaleStorage.savePage("$token");
+        final errorMessage = decoded['message'] ?? 'Log out failed.';
+
+        //first it will check whether that widget is alive in widget tree or not
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Log Out failed: $errorMessage')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(content: Text('An error occurred. Please try again.')),
+      // );
+    }
+      finally {
+      setState(() {
+        _isLoading = false; // Stop loading
+      });
+    }
+  }
 
   // for display pages of bottom navigation bar
   @override
@@ -27,6 +92,8 @@ class _HomePageState extends State<HomePage> {
       const SystemUiOverlayStyle(statusBarColor: AppColors.skyBlue),
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      //when opens keyboard then don't resize bottom
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
@@ -62,262 +129,273 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     color: AppColors.skyBlue,
                     child: SafeArea(
-                      child: Column(
-                        children: [
-                          SizedBox(height: 20),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.emoji_events_rounded,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-
-                                Expanded(
-                                  child: Container(
-                                    height: 45,
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                    ),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        hintText: context.loc.search_payment,
-                                        // 'Search "Payments"',
-                                        filled: true,
-                                        hintStyle: TTextTheme
-                                            .lightTextTheme
-                                            .bodyMedium
-                                            ?.copyWith(color: Colors.white),
-                                        fillColor: AppColors.lightPurple,
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            30,
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: AppColors.lightPurple,
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            30,
-                                          ),
-                                          borderSide: BorderSide(
-                                            color: AppColors.lightPurple,
-                                          ),
-                                        ),
-                                        prefixIcon: Icon(
-                                          Icons.search,
-                                          color: Colors.white,
-                                          // size: 25,
-                                        ),
-
-                                        //give padding outside content also handles situation when text is long -> to ....
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 5,
-                                          horizontal: 5,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                Icon(
-                                  Icons.notifications,
-                                  color: Colors.white,
-                                  size: 25,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: 20),
-                          //Circle Flag
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  isDense: true,
-                                  //shrinks vertical padding
-                                  // isExpanded: true
-                                  value: selectedCurrency,
-                                  // it will Remove default icon
-                                  icon: SizedBox.shrink(),
-                                  dropdownColor: Colors.white,
-                                  menuWidth: 200,
-                                  items: [
-                                    DropdownMenuItem(
-                                      value: "US Dollar",
-                                      child: Row(
-                                        children: [
-                                          CircleFlag('us', size: 15),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "US Dollar",
-                                            style: TTextTheme
-                                                .lightTextTheme
-                                                .labelMedium
-                                                ?.copyWith(color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "IN Rupee",
-                                      child: Row(
-                                        children: [
-                                          CircleFlag('in', size: 15),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "IN Rupee",
-                                            style: TTextTheme
-                                                .lightTextTheme
-                                                .labelMedium
-                                                ?.copyWith(color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    DropdownMenuItem(
-                                      value: "CN Dollar",
-                                      child: Row(
-                                        children: [
-                                          CircleFlag('ca', size: 15),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "CN Dollar",
-                                            style: TTextTheme
-                                                .lightTextTheme
-                                                .labelMedium
-                                                ?.copyWith(color: Colors.black),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                  selectedItemBuilder: (context) {
-                                    return [
-                                      Row(
-                                        children: [
-                                          CircleFlag('us', size: 15),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "US Dollar",
-                                            style: TTextTheme
-                                                .lightTextTheme
-                                                .labelMedium
-                                                ?.copyWith(
-                                                  color: Colors.white70,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          CircleFlag('in', size: 15),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "In Rupee",
-                                            style: TTextTheme
-                                                .lightTextTheme
-                                                .labelMedium
-                                                ?.copyWith(
-                                                  color: Colors.white70,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          CircleFlag('ca', size: 15),
-                                          SizedBox(width: 5),
-                                          Text(
-                                            "Ca Dollar",
-                                            style: TTextTheme
-                                                .lightTextTheme
-                                                .labelMedium
-                                                ?.copyWith(
-                                                  color: Colors.white70,
-                                                ),
-                                          ),
-                                        ],
-                                      ),
-                                    ];
-                                  },
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedCurrency = value!;
-                                    });
-                                  },
-                                ),
-                              ),
-
-                              SizedBox(width: 4),
-                              Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.white60,
-                                size: 14,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "\$20,000",
-                            style: TTextTheme.lightTextTheme.titleMedium
-                                ?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 1,
-                                  height: 1.2,
-                                ),
-                          ),
-
-                          //Available Balance
-                          Text(
-                            context.loc.available_balance,
-                            // "Available Balance",
-                            style: TTextTheme.lightTextTheme.labelMedium
-                                ?.copyWith(color: Colors.white70, height: 2),
-                          ),
-
-                          SizedBox(height: 15),
-                          //Add Money Container
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(32),
-                              ),
-                              border: Border.all(color: Colors.white, width: 2),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(11.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 20),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    Icons.account_balance_wallet,
+                                    Icons.emoji_events_rounded,
                                     color: Colors.white,
-                                    size: 20,
+                                    size: 25,
                                   ),
-                                  SizedBox(width: 8),
 
-                                  Center(
-                                    child: Text(
-                                      '${context.loc.add} ${context.loc.money}',
-                                      // "Add Money",
-                                      style: TTextTheme
-                                          .lightTextTheme
-                                          .labelMedium
-                                          ?.copyWith(color: Colors.white),
+                                  Expanded(
+                                    child: Container(
+                                      height: 45,
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                      ),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          hintText: context.loc.search_payment,
+                                          // 'Search "Payments"',
+                                          filled: true,
+                                          hintStyle: TTextTheme
+                                              .lightTextTheme
+                                              .bodyMedium
+                                              ?.copyWith(color: Colors.white),
+                                          fillColor: AppColors.lightPurple,
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: AppColors.lightPurple,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                            borderSide: BorderSide(
+                                              color: AppColors.lightPurple,
+                                            ),
+                                          ),
+                                          prefixIcon: Icon(
+                                            Icons.search,
+                                            color: Colors.white,
+                                            // size: 25,
+                                          ),
+
+                                          //give padding outside content also handles situation when text is long -> to ....
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 5,
+                                            horizontal: 5,
+                                          ),
+                                        ),
+                                      ),
                                     ),
+                                  ),
+
+                                  Icon(
+                                    Icons.notifications,
+                                    color: Colors.white,
+                                    size: 25,
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
+
+                            SizedBox(height: 20),
+                            //Circle Flag
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    isDense: true,
+                                    //shrinks vertical padding
+                                    // isExpanded: true
+                                    value: selectedCurrency,
+                                    // it will Remove default icon
+                                    icon: SizedBox.shrink(),
+                                    dropdownColor: Colors.white,
+                                    menuWidth: 200,
+                                    items: [
+                                      DropdownMenuItem(
+                                        value: "US Dollar",
+                                        child: Row(
+                                          children: [
+                                            CircleFlag('us', size: 15),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "US Dollar",
+                                              style: TTextTheme
+                                                  .lightTextTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: Colors.black,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "IN Rupee",
+                                        child: Row(
+                                          children: [
+                                            CircleFlag('in', size: 15),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "IN Rupee",
+                                              style: TTextTheme
+                                                  .lightTextTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: Colors.black,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      DropdownMenuItem(
+                                        value: "CN Dollar",
+                                        child: Row(
+                                          children: [
+                                            CircleFlag('ca', size: 15),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "CN Dollar",
+                                              style: TTextTheme
+                                                  .lightTextTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: Colors.black,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                    selectedItemBuilder: (context) {
+                                      return [
+                                        Row(
+                                          children: [
+                                            CircleFlag('us', size: 15),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "US Dollar",
+                                              style: TTextTheme
+                                                  .lightTextTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: Colors.white70,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            CircleFlag('in', size: 15),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "In Rupee",
+                                              style: TTextTheme
+                                                  .lightTextTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: Colors.white70,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            CircleFlag('ca', size: 15),
+                                            SizedBox(width: 5),
+                                            Text(
+                                              "Ca Dollar",
+                                              style: TTextTheme
+                                                  .lightTextTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: Colors.white70,
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ];
+                                    },
+                                    onChanged: (value) {
+                                      setState(() {
+                                        selectedCurrency = value!;
+                                      });
+                                    },
+                                  ),
+                                ),
+
+                                SizedBox(width: 4),
+                                Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: Colors.white60,
+                                  size: 14,
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "\$20,000",
+                              style: TTextTheme.lightTextTheme.titleMedium
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1,
+                                    height: 1.2,
+                                  ),
+                            ),
+
+                            //Available Balance
+                            Text(
+                              context.loc.available_balance,
+                              // "Available Balance",
+                              style: TTextTheme.lightTextTheme.labelMedium
+                                  ?.copyWith(color: Colors.white70, height: 2),
+                            ),
+
+                            SizedBox(height: 15),
+                            //Add Money Container
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(32),
+                                ),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(11.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.account_balance_wallet,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                    SizedBox(width: 8),
+
+                                    Center(
+                                      child: Text(
+                                        '${context.loc.add} ${context.loc.money}',
+                                        // "Add Money",
+                                        style: TTextTheme
+                                            .lightTextTheme
+                                            .labelMedium
+                                            ?.copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -760,15 +838,33 @@ class _HomePageState extends State<HomePage> {
             const Center(child: Text("Messages page")),
 
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 140, left: 20, bottom: 170),
+                      child: Text(
+                        "Hello, ${widget.firstName} ${widget.lastName}",
+                        style: TTextTheme.lightTextTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 // Text("Person page"),
                 Center(
-                  child: ElevatedButton(
+                  child:
+                  _isLoading?CircularProgressIndicator():
+                  ElevatedButton(
                     onPressed: () async {
-                      await LocaleStorage.savePage(false);
+                      await LocaleStorage.savePage("null");
                       await LocaleStorage.onBoard(true);
+                      await LocaleStorage.saveFName("null");
+                      // await LocaleStorage.onBoard();
 
+                      await logoutUser(); //calls api
                       if (context.mounted) {
                         //before context is full ready using it
                         Navigator.pushReplacement(
@@ -780,7 +876,10 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Text(
                       "Log Out",
-                      style: TTextTheme.lightTextTheme.bodyLarge?.copyWith(color: Colors.white)
+                      style: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
+                        color: Colors.white,
+                        height: 0.4,
+                      ),
                     ),
                   ),
                 ),

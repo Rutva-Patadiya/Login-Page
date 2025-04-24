@@ -8,30 +8,41 @@ import 'on_boarding_page.dart';
 import 'local_storage.dart';
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized(); //checks app is initialized
-  final savedLocale = await LocaleStorage.getSavedLocale(); //get saved locale from local_storage [this method returns the locale obj]
+  final savedLocale = await LocaleStorage.getSavedLocale();
+  //get saved locale from local_storage [this method returns the locale obj]
   final savedPage = await LocaleStorage.getSavedPage(); //for login page
   final isOnboarded = await LocaleStorage.getBoardPage();
+  final fName = await LocaleStorage.getFName();
+  final lName = await LocaleStorage.getLName();
 
   runApp(
     MyAppWrapper(
+      //for shared pref
       initialLocale: savedLocale,
       initialPage: savedPage,
       isOnBoarded: isOnboarded,
+      fName: fName,
+      lName: lName,
     ),
   );
 }
 
 class MyAppWrapper extends StatefulWidget {
   final Locale initialLocale;
-  final bool initialPage; //modified for page
+  final String? initialPage; //modified for page
   final bool isOnBoarded;
+  final String? fName;
+  final String? lName;
 
   const MyAppWrapper({
     super.key,
     required this.initialLocale,
     required this.initialPage,
     required this.isOnBoarded,
+    required this.fName,
+    required this.lName,
   }); //passed savedLocale
 
   @override
@@ -53,6 +64,7 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
     setState(() {
       _locale = newLocale;
     });
+    //stores language in shared pref
     LocaleStorage.saveLocale(newLocale.languageCode);
   }
 
@@ -65,19 +77,25 @@ class _MyAppWrapperState extends State<MyAppWrapper> {
       child: MyApp(
         initialPage: widget.initialPage,
         isOnBoarded: widget.isOnBoarded,
+        fName: widget.fName,
+        lName:widget.lName
       ),
     );
   }
 }
 
 class MyApp extends StatelessWidget {
-  final bool initialPage;
+  final String? initialPage;
   final bool isOnBoarded;
+  final String? fName;
+  final String? lName;
 
   const MyApp({
     super.key,
-    required this.initialPage,//for checking loggedin is true or not
+    required this.initialPage, //for checking loggedin is true or false by checking token
     required this.isOnBoarded,
+    required this.fName,
+    required this.lName,
   });
 
   @override
@@ -88,8 +106,12 @@ class MyApp extends StatelessWidget {
 
     if (!isOnBoarded) {
       initialScreen = OnBoardingPage();
-    } else if (initialPage) {
-      initialScreen = HomePage();
+    } else if (isOnBoarded && initialPage == 'null' || fName == 'null') {
+      initialScreen = Login();
+    }
+    //check token is null or not
+    else if (initialPage != null) {
+      initialScreen = HomePage("$fName","$lName",'null', null);
     } else {
       initialScreen = Login();
     }
