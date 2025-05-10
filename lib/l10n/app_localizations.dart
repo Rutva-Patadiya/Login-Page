@@ -189,11 +189,11 @@ abstract class AppLocalizations {
   /// **'Bills'**
   String get bills;
 
-  /// No description provided for @savings.
+  /// No description provided for @saving.
   ///
   /// In en, this message translates to:
   /// **'Savings'**
-  String get savings;
+  String get saving;
 
   /// No description provided for @bank.
   ///

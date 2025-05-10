@@ -54,7 +54,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get bills => 'बिल';
 
   @override
-  String get savings => 'Savings';
+  String get saving => 'बचत';
 
   @override
   String get bank => 'बैंक';
