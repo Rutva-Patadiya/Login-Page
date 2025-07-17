@@ -14,7 +14,6 @@ import 'models/user_model.dart';
 
 class Login extends StatefulWidget {
   //const because we can reuse it not everytime rebuild it
-
   const Login({super.key});
 
   @override
@@ -23,7 +22,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   //final assign only once
-
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -84,6 +82,7 @@ class _LoginState extends State<Login> {
         //passed token
         await LocaleStorage.savePage(userData.token);
         await LocaleStorage.saveFName(userData.firstname);
+        await LocaleStorage.saveLName(userData.lastname);
 
         await LocaleStorage.onBoard(true);
 
@@ -307,9 +306,7 @@ class _LoginState extends State<Login> {
                               context.loc.loginButton,
                               // AppLocalizations.of(context)!.loginButton, // or simply "Log In"
                               strutStyle: StrutStyle(leading: 1.5),
-                              style: TTextTheme.lightTextTheme.bodyLarge
-                                  ?.copyWith(color: Colors.white),
-                            ),
+                            style:TextStyle(color: Colors.white)),
                           ),
                         ),
                   ],

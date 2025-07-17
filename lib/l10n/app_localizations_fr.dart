@@ -15,7 +15,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginTitle => 'Connectez-vous à E-Mart';
 
   @override
-  String get loginSubTitle => 'Entrez votre e-mail enregistré pour vous connecter.';
+  String get loginSubTitle =>
+      'Entrez votre e-mail enregistré pour vous connecter.';
 
   @override
   String get email => 'E-mail';
@@ -30,10 +31,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginButton => 'Se connecter';
 
   @override
-  String get onBoardText1 => 'Approuvé par des millions de personnes, faites partie d\'un tout';
+  String get onBoardText1 =>
+      'Approuvé par des millions de personnes, faites partie d\'un tout';
 
   @override
-  String get onBoardText2 => 'Dépensez de l\'argent à l\'étranger et suivez vos dépenses';
+  String get onBoardText2 =>
+      'Dépensez de l\'argent à l\'étranger et suivez vos dépenses';
 
   @override
   String get onBoardText3 => 'Recevez de l\'argent de partout dans le monde';

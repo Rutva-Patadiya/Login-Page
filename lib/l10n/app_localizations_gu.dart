@@ -15,7 +15,8 @@ class AppLocalizationsGu extends AppLocalizations {
   String get loginTitle => 'ઈ-માર્ટમાં લોગિન કરો';
 
   @override
-  String get loginSubTitle => 'લોગિન કરવા માટે તમારું નોંધાયેલ ઇમેલ એડ્રેસ દાખલ કરો.';
+  String get loginSubTitle =>
+      'લોગિન કરવા માટે તમારું નોંધાયેલ ઇમેલ એડ્રેસ દાખલ કરો.';
 
   @override
   String get email => 'ઈમેલ';

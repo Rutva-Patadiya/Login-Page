@@ -15,7 +15,8 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loginTitle => 'ई-मार्ट में लॉग इन करें';
 
   @override
-  String get loginSubTitle => 'लॉग इन करने के लिए अपना पंजीकृत ईमेल आईडी दर्ज करें।';
+  String get loginSubTitle =>
+      'लॉग इन करने के लिए अपना पंजीकृत ईमेल आईडी दर्ज करें।';
 
   @override
   String get email => 'ईमेल';
@@ -30,10 +31,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String get loginButton => 'लॉग इन करें';
 
   @override
-  String get onBoardText1 => 'लाखों लोगों द्वारा भरोसा किया गया, एक हिस्सा बनें';
+  String get onBoardText1 =>
+      'लाखों लोगों द्वारा भरोसा किया गया, एक हिस्सा बनें';
 
   @override
-  String get onBoardText2 => 'विदेश में पैसे खर्च करें, और अपने खर्च को ट्रैक करें';
+  String get onBoardText2 =>
+      'विदेश में पैसे खर्च करें, और अपने खर्च को ट्रैक करें';
 
   @override
   String get onBoardText3 => 'दुनिया में कहीं से भी पैसा प्राप्त करें';

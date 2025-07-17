@@ -6,10 +6,11 @@ class TElevatedButtonTheme {
   TElevatedButtonTheme._();
 
   static final lightElevatedButtonTheme = ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(textStyle: TTextTheme.lightTextTheme.labelMedium?.copyWith(
+    style: ElevatedButton.styleFrom(textStyle: TTextTheme.lightTextTheme.bodyLarge?.copyWith(
         fontWeight: FontWeight.bold,
-        height: 1.2,
-        letterSpacing: 1.3,),
+        // height: 1.2,
+        letterSpacing: 1.3,
+        ),
         // textStyle: TTextTheme.lightTextTheme.titleLarge,
         padding: EdgeInsets.only(top: 10),
         minimumSize: const Size(350, 50),
@@ -17,14 +18,14 @@ class TElevatedButtonTheme {
       ),
     );
 
-    static final darkElevatedButtonTheme = ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.blue,
-    textStyle: const TextStyle(
-
-    ),
-    padding: EdgeInsets.only(top: 10),
-    minimumSize: const Size(350, 50),
-    ),
-  );
+  //   static final darkElevatedButtonTheme = ElevatedButtonThemeData(
+  //   style: ElevatedButton.styleFrom(
+  //   backgroundColor: Colors.blue,
+  //   textStyle: const TextStyle(
+  //
+  //   ),
+  //   padding: EdgeInsets.only(top: 10),
+  //   minimumSize: const Size(350, 50),
+  //   ),
+  // );
 }

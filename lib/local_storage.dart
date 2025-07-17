@@ -19,9 +19,9 @@ class LocaleStorage {
   //pass the token
   static const String _key1 = 'isLoggedIn';
 
-  static Future<void> savePage(String page) async {
+  static Future<void> savePage(String? page) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key1, page);
+    await prefs.setString(_key1, page!);
   }
 
   static Future<String?> getSavedPage() async {
@@ -43,9 +43,9 @@ class LocaleStorage {
 
   static const String _key4 = 'last_name';
 
-  static Future<void> saveLName(String name) async {
+  static Future<void> saveLName(String lname) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key4, name);
+    await prefs.setString(_key4, lname);
   }
 
   static Future<String?> getLName() async {

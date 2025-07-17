@@ -862,6 +862,7 @@ class _HomePageState extends State<HomePage> {
                       await LocaleStorage.savePage("null");
                       await LocaleStorage.onBoard(true);
                       await LocaleStorage.saveFName("null");
+                      await LocaleStorage.saveLName("null");
                       // await LocaleStorage.onBoard();
 
                       await logoutUser(); //calls api
